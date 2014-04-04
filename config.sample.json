@@ -1,5 +1,7 @@
 {
-    "port": "8080",
+    "blog": {
+        "port": "8080"
+    },
     "users": {
         "userabc": {
             "permissions": ["read", "comment", "post"],
