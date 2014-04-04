@@ -1,0 +1,21 @@
+{
+    "name": "zhat",
+    "description": "Private blog system",
+    "version": "0.0.1",
+    "author": {
+        "name": "Zeno Zeng",
+        "email": "zenoofzeng@gmail.com"
+    },
+    "homepage": "https://github.com/zenozeng/zhat",
+    "dependencies": {
+        "connect": "latest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/zenozeng/zhat.git"
+    },
+    "license": {
+        "type": "MIT",
+        "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+}

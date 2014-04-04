@@ -1,0 +1,11 @@
+{
+    "port": "8080",
+    "users": {
+        "userabc": {
+            "permissions": ["read", "comment", "post"],
+            "notifications": ["newComment", "newPost"],
+            "email": "abc@example.com",
+            "password": "You password in SHA-512"
+        }
+    }
+}
