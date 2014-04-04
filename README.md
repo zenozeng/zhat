@@ -8,17 +8,28 @@ Still coding.
 
 ### Init Config
 
-cp config.sample.json config.json
+```
+mv config.sample.json config.json
+```
+
+### Init DB
+
+```
+mv db.sample.sqlite db.sqlite
+```
 
 ### Install node-sqlite3
 
+```
 sudo apt-get install node-sqlite3
+```
 
 ### Install Zhat
 
-git clone
-
+```
+git clone git@github.com:zenozeng/zhat.git
 npm install
+```
 
 ### Config
 

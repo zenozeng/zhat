@@ -8,7 +8,9 @@
     },
     "homepage": "https://github.com/zenozeng/zhat",
     "dependencies": {
-        "connect": "latest"
+        "connect": "latest",
+        "express": "latest"
+        
     },
     "repository": {
         "type": "git",
