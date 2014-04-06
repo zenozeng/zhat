@@ -3,21 +3,23 @@ sqlite3 = require('sqlite3').verbose()
 db = new sqlite3.Database 'db.sample.sqlite'
 
 sql = '
-  CREATE TABLE `zhat_comments` (
+  CREATE TABLE `comments` (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `postid` INTERGER,
     `author` VARCHAR(200),
+    "timestamp" INTEGER,
     `content` TEXT,
     `parent` INTERGER );'
 
 sql += '
-  CREATE INDEX `pid` ON `zhat_comments` (
+  CREATE INDEX `pid` ON `comments` (
     `postid` ASC);'
 
 sql += '
-  CREATE TABLE zhat_posts (
+  CREATE TABLE posts (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "author" VARCHAR(200),
+    "timestamp" INTEGER,
     "content" TEXT );'
 
 sql += '
