@@ -4,6 +4,18 @@ Zhat is a blog system targeting private bloging.
 
 Still coding.
 
+## Design
+
+### Restful API
+
+```
+genQuery = (obj) ->
+    obj.timestamp = (new Date()).getTime()
+    obj.username = username
+    obj.signature = HmacSHA512(JSON.stringify(obj), passphrase)
+    obj
+```
+
 ## Install
 
 ### Init Config
