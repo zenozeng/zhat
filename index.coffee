@@ -50,13 +50,13 @@ passAuth = (query) ->
 sql = """
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` INT AUTO_INCREMENT,
-  `postid` INT,
+  `pid` INT,
   `author` VARCHAR(200),
   `timestamp` INT,
   `content` TEXT,
   `parent` INT,
   PRIMARY KEY (`id`),
-  KEY `pid` (`postid`)
+  KEY `pid` (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 """
 query null, sql, null
@@ -75,7 +75,7 @@ query null, sql, null
 sql = """
 CREATE TABLE IF NOT EXISTS `files` (
   `id` INT AUTO_INCREMENT,
-  `postid` INT,
+  `pid` INT,
   `content` LONGTEXT,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -117,7 +117,11 @@ app.get /posts\/(\d+)$/, (req, res) ->
   sql = "SELECT * FROM posts WHERE id=?"
   query res, sql, id, (results) ->
     if results.length > 0
-      response res, results[0]
+      post = results[0]
+      sql = "SELECT * FROM comments WHERE pid=?"
+      query res, sql, id, (comments) ->
+        post.comments = comments
+        response res, post
     else
       response res, {error: "404 NOT FOUND"}
 
@@ -142,10 +146,10 @@ app.post '/posts', (req, res) ->
 app.post '/comments', (req, res) ->
   {username} = req.query
   timestamp = (new Date()).getTime()
-  {postid, content, parent} = req.body
+  {pid, content, parent} = req.body
 
-  sql = "INSERT INTO comments (author, postid, timestamp, content, parent) VALUES (?, ?, ?, ?, ?)"
-  query res, sql, username, postid, timestamp, content, parent, (results) ->
+  sql = "INSERT INTO comments (author, pid, timestamp, content, parent) VALUES (?, ?, ?, ?, ?)"
+  query res, sql, username, pid, timestamp, content, parent, (results) ->
     response res, {msg: "ok!"}
 
 ########################################
@@ -157,9 +161,9 @@ app.post '/comments', (req, res) ->
 # add file
 app.post '/files', (req, res) ->
   console.log req.body
-  {content, postid} = req.body
-  sql = "INSERT INTO files (content, postid) VALUES (?, ?)"
-  query res, sql, content, postid, (results) ->
+  {content, pid} = req.body
+  sql = "INSERT INTO files (content, pid) VALUES (?, ?)"
+  query res, sql, content, pid, (results) ->
     response res, {msg: "ok!"}
 
 # get file by id
