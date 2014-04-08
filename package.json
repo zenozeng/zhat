@@ -8,9 +8,11 @@
     },
     "homepage": "https://github.com/zenozeng/zhat",
     "dependencies": {
-        "connect": "latest",
-        "express": "latest"
-        
+        "express": "latest",
+        "mysql": "latest"
+    },
+    "scripts": {
+        "start": "node index.js"
     },
     "repository": {
         "type": "git",

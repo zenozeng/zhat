@@ -1,11 +1,19 @@
 {
-    "blog": {
-        "port": "8080"
-    },
     "users": {
         "userabc": {
             "email": "abc@example.com",
             "passphrase": "You passphrase for HMAC SHA-512"
         }
+    },
+    "db": {
+        "host": "",
+        "port": "",
+        "user": "",
+        "password": "",
+        "database": "Database Name"
+    },
+    "etc": {
+        "port": "8080",
+        "usebae": false
     }
 }

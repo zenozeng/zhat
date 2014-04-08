@@ -25,6 +25,7 @@ sql += '
 sql += '
   CREATE TABLE files (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "postid" INTERGER,
     "content" CLOB );'
 
 db.run sql
