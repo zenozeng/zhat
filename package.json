@@ -9,7 +9,8 @@
     "homepage": "https://github.com/zenozeng/zhat",
     "dependencies": {
         "express": "latest",
-        "mysql": "2.0.0-alpha9"
+        "mysql": ">=2.0.0-alpha9",
+        "bae-message": "latest"
     },
     "scripts": {
         "start": "node index.js"

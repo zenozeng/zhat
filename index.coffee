@@ -3,6 +3,7 @@ express = require 'express'
 mysql = require 'mysql'
 crypto = require 'crypto'
 config = require './lib/config.js'
+BaeMessage = require 'bae-message'
 
 ########################################
 #
@@ -28,6 +29,10 @@ query = (res, sql, args..., callback) ->
         else
           callback?(results)
         conn.release();
+
+mail = (to, subject, body) ->
+  bae = new BaeMessage config.baeMessage
+  bae.mail 'fromAddress', to, subject, body
 
 passAuth = (query) ->
   {username, signature} = query

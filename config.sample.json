@@ -12,8 +12,10 @@
         "password": "",
         "database": "Database Name"
     },
+    "baeMessage": {
+        "queue": "queue ID"
+    },
     "etc": {
-        "port": "8080",
-        "usebae": false
+        "port": "8080"
     }
 }
