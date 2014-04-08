@@ -126,7 +126,6 @@ app.get /posts\/(\d+)$/, (req, res) ->
       response res, {error: "404 NOT FOUND"}
 
 # add post
-# TODO: update post if post already exits
 app.post '/posts', (req, res) ->
   {username} = req.query
   {content} = req.body
@@ -134,6 +133,14 @@ app.post '/posts', (req, res) ->
 
   sql = "INSERT INTO posts (author, timestamp, content) VALUES (?, ?, ?)"
   query res, sql, username, timestamp, content, (results) ->
+    response res, {msg: "ok!"}
+
+# update post
+app.post /posts\/(\d+)$/, (req, res) ->
+  id = req.params[0]
+  {content} = req.body
+  sql = "UPDATE posts SET content=? WHERE id=?"
+  query res, sql, content, id, (results) ->
     response res, {msg: "ok!"}
 
 ########################################
