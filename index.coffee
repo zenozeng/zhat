@@ -10,7 +10,9 @@ config = require './lib/config.js'
 #
 ########################################
 
-response = (res, msg) -> res.send JSON.stringify msg
+response = (res, msg) ->
+  if res?
+    res.send JSON.stringify msg
 
 dbPool = mysql.createPool config.db # 会自动重连
 query = (res, sql, args..., callback) ->
@@ -24,7 +26,7 @@ query = (res, sql, args..., callback) ->
           console.log err
           response res, {err: "SQL ERROR: fail to query"}
         else
-          callback(results)
+          callback?(results)
         conn.release();
 
 passAuth = (query) ->
@@ -41,6 +43,47 @@ passAuth = (query) ->
 
 ########################################
 #
+# CREATE TABLES IF NOT EXIST
+#
+########################################
+
+sql = """
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` INT AUTO_INCREMENT,
+  `postid` INT,
+  `author` VARCHAR(200),
+  `timestamp` INT,
+  `content` TEXT,
+  `parent` INT,
+  PRIMARY KEY (`id`),
+  KEY `pid` (`postid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+"""
+query null, sql, null
+
+sql = """
+CREATE TABLE IF NOT EXISTS `posts` (
+  `id` INT AUTO_INCREMENT,
+  `author` VARCHAR(200),
+  `timestamp` INT,
+  `content` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+"""
+query null, sql, null
+
+sql = """
+CREATE TABLE IF NOT EXISTS `files` (
+  `id` INT AUTO_INCREMENT,
+  `postid` INT,
+  `content` LONGTEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+"""
+query null, sql, null
+
+########################################
+#
 # Express Init
 #
 ########################################
@@ -50,9 +93,11 @@ app = express()
 # auth
 app.use (req, res, next) ->
   # unless passAuth(req.query)
-  #   response {error: "Signature not match"}
+  #   response res, {error: "Signature not match"}
   req.query.username = "zenozeng" # authed user
   next()
+
+app.use express.bodyParser()
 
 ########################################
 #
@@ -62,12 +107,19 @@ app.use (req, res, next) ->
 
 # get posts list
 app.get '/posts', (req, res) ->
-  response res, {posts: []}
+  sql = "SELECT id, author, timestamp FROM posts"
+  query res, sql, (results) ->
+    response res, {posts: results}
 
 # get posts by id
 app.get /posts\/(\d+)$/, (req, res) ->
   id = req.params[0]
-  response res, {id: id}
+  sql = "SELECT * FROM posts WHERE id=?"
+  query res, sql, id, (results) ->
+    if results.length > 0
+      response res, results[0]
+    else
+      response res, {error: "404 NOT FOUND"}
 
 # add post
 # TODO: update post if post already exits
@@ -78,7 +130,7 @@ app.post '/posts', (req, res) ->
 
   sql = "INSERT INTO posts (author, timestamp, content) VALUES (?, ?, ?)"
   query res, sql, username, timestamp, content, (results) ->
-    response {msg: "ok!"}
+    response res, {msg: "ok!"}
 
 ########################################
 #
@@ -92,9 +144,9 @@ app.post '/comments', (req, res) ->
   timestamp = (new Date()).getTime()
   {postid, content, parent} = req.body
 
-  sql = "INSERT INTO comments (author, postid, timestamp, content, parent) VALUES (?, ?, ?)"
+  sql = "INSERT INTO comments (author, postid, timestamp, content, parent) VALUES (?, ?, ?, ?, ?)"
   query res, sql, username, postid, timestamp, content, parent, (results) ->
-    response {msg: "ok!"}
+    response res, {msg: "ok!"}
 
 ########################################
 #
@@ -104,17 +156,21 @@ app.post '/comments', (req, res) ->
 
 # add file
 app.post '/files', (req, res) ->
+  console.log req.body
   {content, postid} = req.body
   sql = "INSERT INTO files (content, postid) VALUES (?, ?)"
   query res, sql, content, postid, (results) ->
-    response {msg: "ok!"}
+    response res, {msg: "ok!"}
 
 # get file by id
 app.get /files\/(\d+)$/, (req, res) ->
   id = req.params[0]
   sql = "SELECT * FROM files WHERE id=?"
-  query, res, sql, id, (results) ->
-    console.log results
+  query res, sql, id, (results) ->
+    if results.length > 0
+      response res, results[0]
+    else
+      response res, {error: "404 NOT FOUND"}
 
 ########################################
 #
@@ -125,4 +181,4 @@ app.get /files\/(\d+)$/, (req, res) ->
 app.use (req, res, next) ->
   response res, {error: "404 NOT FOUND"}
 
-app.listen config.blog.port
+app.listen config.etc.port
