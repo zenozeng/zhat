@@ -34,6 +34,7 @@ mail = (to, subject, body) ->
   bae = new BaeMessage config.baeMessage
   bae.mail 'fromAddress', to, subject, body
 
+# TODO: rewrite using RSA sig
 passAuth = (query) ->
   {username, signature} = query
   return false unless signature?

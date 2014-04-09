@@ -2,7 +2,7 @@
     "users": {
         "userabc": {
             "email": "abc@example.com",
-            "passphrase": "You passphrase for HMAC SHA-512"
+            "publicKey": "User's RSA Public Key"
         }
     },
     "db": {
