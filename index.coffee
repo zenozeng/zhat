@@ -1,4 +1,3 @@
-http = require 'http'
 express = require 'express'
 crypto = require 'crypto'
 config = require './lib/config.js'
