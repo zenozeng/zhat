@@ -1,9 +1,8 @@
 http = require 'http'
 express = require 'express'
-mysql = require 'mysql'
 crypto = require 'crypto'
 config = require './lib/config.js'
-BaeMessage = require 'bae-message'
+Mail = require './lib/mail.js'
 
 ########################################
 #
@@ -30,9 +29,7 @@ query = (res, sql, args..., callback) ->
           callback?(results)
         conn.release();
 
-mail = (to, subject, body) ->
-  bae = new BaeMessage config.baeMessage
-  bae.mail 'fromAddress', to, subject, body
+mail = new Mail(config)
 
 # TODO: rewrite using RSA sig
 passAuth = (query) ->

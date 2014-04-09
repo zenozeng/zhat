@@ -23,14 +23,9 @@ they are static resources, so config them in zhat-client.
 
 ## API
 
-### Signature
-
-```
-genQuery = (obj) ->
-    obj.timestamp = (new Date()).getTime()
-    obj.username = username
-    obj.signature = HmacSHA512(JSON.stringify(obj), passphrase)
-    obj
-```
-
 see test/test.sh for more api.
+
+## Mail
+
+Zhat use BAE Message by default.
+You can use your own mail module to replace lib/mail.js.
